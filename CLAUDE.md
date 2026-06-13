@@ -24,9 +24,13 @@ State `CONTEXT.md ✓` and `NIFTYSHIELD_PROFILE.md ✓` in your first response.
 
 ### Step 2 — Identify the transcript
 
-Transcripts are in `transcripts/` as `<video_id>.txt` (e.g., `2175knd26Yw.txt`).
-Before analyzing, fetch video metadata using `scripts/fetch_metadata.py <video_id>` to get
-the title and channel name. If metadata fetch fails, proceed with video ID as title.
+Run `python3 scripts/status.py --no-fetch` to get the list of pending transcripts.
+
+- If **one** pending transcript exists → use it automatically.
+- If **multiple** pending transcripts exist → list them with titles (run `scripts/fetch_metadata.py <video_id>` for each) and ask the user which to process.
+- If **none** pending → inform the user that all transcripts are processed.
+
+Once the video ID is confirmed, fetch metadata via `python3 scripts/fetch_metadata.py <video_id>` for the title and channel name. If metadata fetch fails, proceed with video ID as title.
 
 ### Step 3 — Analyze and produce finding
 
