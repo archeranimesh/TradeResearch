@@ -44,6 +44,27 @@ If a finding contains a strategy, metric, or journal prompt that is evergreen (n
 video-specific), add it to the appropriate file in `knowledge_base/`. This is judgment-driven —
 not every finding warrants a knowledge base entry.
 
+Each KB entry must begin with a YAML frontmatter block:
+
+```markdown
+---
+tags: [tag1, tag2, tag3]
+source: findings/<video_id>.md
+added: YYYY-MM-DD
+---
+```
+
+**Tagging conventions:**
+- Strategy type: `options-selling`, `momentum-equity`, `delta-neutral`, `mean-reversion`, `vcp`, `iron-condor`, `strangle`
+- Domain: `risk-management`, `position-sizing`, `entry-filter`, `adjustment`, `strike-selection`, `backtesting`
+- Tools/workflow: `ai-workflow`, `automation`, `journaling`, `knowledge-management`, `screening`
+- Market: `nse`, `indian-market`, `index-options`, `equity`
+- Meta: `psychology`, `process`, `metrics`, `edge-calculation`
+
+Use 2–5 tags per entry. Tags are the primary mechanism for future reorganization into subdirectories — choose them to reflect how the entry would be grouped, not just what it contains.
+
+Before adding a new KB entry, scan the target file for an existing entry on the same concept. If one exists, update it rather than appending a duplicate.
+
 ---
 
 ## Rules
