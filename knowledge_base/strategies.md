@@ -9,6 +9,52 @@ Link back to the source finding for full context.
 <!-- Entries added here when a strategy warrants permanent curation -->
 
 ---
+tags: [options-selling, strangle, iron-condor, strike-selection, backtesting, delta-neutral]
+source: findings/8MJkZQSiY_E.md
+added: 2026-06-13
+---
+
+## DTE / Delta Framework for Options Selling (Backtested)
+
+**Source:** [findings/8MJkZQSiY_E.md](../findings/8MJkZQSiY_E.md)
+
+The correct delta to sell depends on DTE — using the same delta across all timeframes is a common error. Backtesting on US index ETFs (QQQ/S&P 500) shows:
+
+| DTE | Delta | Use Case |
+|---|---|---|
+| 90 DTE | 15 delta | Put selling — longer theta capture, smaller position per trade |
+| 45 DTE | 15 delta | Transition zone — put selling |
+| 30 DTE | 30 delta | Put selling, strangles, PMCC anchor leg |
+| 0–1 DTE | 50 delta (ATM) | PMCC daily short leg, rolling put diagonal |
+
+**Why 30 delta at 30 DTE:** "Theta decay happens heavily from 45 days to [expiry]. When we are doing within the 30 days, we have to go like 30 delta. Backtesting showed that." — 15 delta at 30 DTE generates insufficient credit to make the trade worthwhile after stop-loss sizing.
+
+**Why 15 delta at 90 DTE:** Gives enough credit while maintaining a large OTM buffer. The longer time window allows delta to erode naturally without requiring a large initial delta exposure.
+
+**NSE adaptation:** Nifty's primary cycle is monthly expiry (~30 DTE). Use 30 delta PE for put selling and 30 delta on both sides for strangles. For the rare 90-DTE equivalent (far monthly), shift to 15 delta.
+
+---
+tags: [options-selling, strangle, adjustment, risk-management, index-options]
+source: findings/8MJkZQSiY_E.md
+added: 2026-06-13
+---
+
+## Jade Lizard — Zero Upside Risk Strangle Variant
+
+**Source:** [findings/8MJkZQSiY_E.md](../findings/8MJkZQSiY_E.md)
+
+**Construction:**
+1. Sell 30-delta put (~30 DTE) — generates bulk of the credit
+2. Add: sell a call credit spread (5-wide, near ATM) — generates additional premium
+3. Ensure: total credit received > call spread width → upside risk = zero
+
+**Example (QQQ):** Sell 30D put for ~$770 + sell 5-wide CE spread for ~$230 = $1,000 total credit. Call spread max loss = $500. Since $1,000 > $500, upside gap cannot create a net loss.
+
+**Margin:** In the US, no additional margin vs. naked put — the call spread margin offsets. Verify NSE treatment: short CE spread margin may differ from US, but logic holds if total credit > spread width.
+
+**When to use:** Mildly bullish but wanting to monetize the upside (vs. pure put selling). Do not use if you expect a large gap-up — the call spread will be deep ITM but capped, while the total structure still profits.
+
+---
 
 ---
 tags: [ai-workflow, automation, knowledge-management, screening]

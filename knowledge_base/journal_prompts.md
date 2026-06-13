@@ -8,6 +8,46 @@ Link back to the source finding for full context.
 <!-- Entries added here when a prompt warrants permanent curation -->
 
 ---
+tags: [process, psychology, risk-management, options-selling]
+source: findings/8MJkZQSiY_E.md
+added: 2026-06-13
+---
+
+## Pre-Trade Decision Protocol — No In-Trade Decisions
+
+**Source:** [findings/8MJkZQSiY_E.md](../findings/8MJkZQSiY_E.md)
+
+"Decisions have to be made pre-trade, not while the trade is running and definitely not when it is going against you."
+
+Before entering any position, write down:
+1. Entry conditions (why this trade, why now)
+2. Max loss (2x credit for premium selling)
+3. Exit condition if wrong (stop trigger, no exceptions)
+4. What "winning" looks like (close at X% profit, or hold to expiry)
+
+Once the trade is live, the only permitted action is executing the pre-written plan. No adjustments, no rolling, no "let me see if it comes back." The moment you deviate under stress, you are trading on emotion, not edge.
+
+**Journal prompt:** "If I had to write my exit rule for this trade before I entered it, what would it say? Did I follow it exactly? If not, what changed — and was that change evidence-based or emotional?"
+
+---
+tags: [process, psychology, journaling]
+source: findings/8MJkZQSiY_E.md
+added: 2026-06-13
+---
+
+## Post-Market Disconnect Ritual
+
+**Source:** [findings/8MJkZQSiY_E.md](../findings/8MJkZQSiY_E.md)
+
+Naresh deliberately disconnects from market price after the close. His wife asks "What is S&P today?" — his answer is always "I don't know." Not because he doesn't track performance, but because obsessing over mark-to-market after hours produces no edge and increases anxiety.
+
+**The distinction:** Know your P&L at the end of day (review positions, check Greeks). But do not watch CNBC, check futures, or refresh the brokerage app after market hours. The market will do what it does; your decisions were made pre-trade.
+
+**For NSE traders:** Nifty futures trading after 3:30 PM is noise. Your Nifty options positions are closed for the day. Reviewing OI data or charts after close for tomorrow's setup is acceptable; checking SGX Nifty every 20 minutes at night is not.
+
+**Journal prompt:** "How many minutes after market close did I spend monitoring positions or checking prices? What decision did that enable that I couldn't have made before the next open?"
+
+---
 
 ---
 tags: [edge-calculation, journaling, metrics, automation, nse]
