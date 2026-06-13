@@ -139,3 +139,52 @@ Ask me: "Is this within your pre-defined system rules? If yes, do nothing. If no
 ```
 
 **Personas for learning:** Store expert personas (Rob Carver, Perry Kaufman, etc.) as separate system prompts. Upload book chapters or papers and ask the persona to explain it as a mentor to a practitioner-level student. Faster than re-reading; produces applied explanations rather than academic ones.
+
+---
+tags: [process, psychology, journaling, edge-calculation]
+source: findings/fPFOXqmzJp8.md
+added: 2026-06-13
+---
+
+## Trade Grading Matrix — Process Over Outcome
+
+**Source:** [findings/fPFOXqmzJp8.md](../findings/fPFOXqmzJp8.md)
+
+Grade every trade on two axes: outcome (win/loss) and execution (followed process / broke rules). This produces four cells:
+
+| | Followed Process | Broke Rules |
+|---|---|---|
+| **Win** | Good trade ✓ | **Dangerous trade ⚠** |
+| **Loss** | Good trade ✓ | Bad trade ✗ |
+
+The cell to watch is the dangerous trade: a win taken while breaking rules. The brain records this as evidence that rule-breaking works, creating a reinforcement loop that surfaces later at worse sizing or worse market conditions. A rule-breaking win is more damaging to long-term edge than a rule-breaking loss.
+
+**Practical application:** In your post-trade journal, score every trade on the 2x2, not just whether it was profitable. If you accumulate more than 2–3 "dangerous trades" in a week, that's a process-level alert — the rules may be too restrictive (in which case update the rules), or you're drifting under P&L pressure (in which case reduce size).
+
+**Journal prompt:** "Was this trade in the top-left or top-right cell? If top-right: what rule did I break? What would I need to believe for that break to be justified? Is that belief in my trading plan?"
+
+---
+
+---
+tags: [process, automation, ai-workflow, metrics]
+source: findings/4TTb0f9fk1U.md
+added: 2026-06-13
+---
+
+## The 10/90 Rule — Signal Logic vs Production Plumbing
+
+**Source:** [findings/4TTb0f9fk1U.md](../findings/4TTb0f9fk1U.md)
+
+"The signal logic is normally 10% of the actual work. The other 90% is going to be plumbing, reconciling, and things like that that most people don't think of when transitioning something from a back test to a live algo."
+
+The five production-readiness requirements that are absent from every backtest:
+
+1. **Broker module** — wrap account balance, open positions, order status, order placement, and order cancellation into clean functions. Never call raw broker API from signal logic.
+2. **EOD scheduler** — replace the bar loop with a cron/scheduler that runs once per bar period, fetches only the latest incremental data, evaluates signals, and submits orders.
+3. **Broker as source of truth** — on every run, reconcile local position state against broker-reported positions. Assume your code is wrong; the broker is right.
+4. **Persist state to disk** — write all trade records, fill prices, and entry timestamps to a JSON or SQLite file. Algo must be crash-recoverable and restart-safe.
+5. **Safety rails** — market-hours guard, double-order prevention on restart, drawdown-based kill switch, full logging of every order event, partial-fill handling policy.
+
+**Journal prompt for systematic traders:** "If my algo crashed tonight and restarted tomorrow morning, would it correctly know its current position, prevent duplicate orders, and resume without human intervention? Which of these five requirements is my current weakest link?"
+
+**NSE adaptation:** Add NSE-specific rails — SEBI margin checks before order submission, expiry-day position close triggers, and alerts for illiquid strikes that may cause partial fills at wide spreads.

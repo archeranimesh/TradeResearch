@@ -120,6 +120,35 @@ Instead of selling the ATM straddle/strangle (where premium varies with IV), sel
 ---
 
 ---
+tags: [risk-management, position-sizing, backtesting, metrics, automation]
+source: findings/4TTb0f9fk1U.md
+added: 2026-06-13
+---
+
+## ATR-Based Volatility Position Sizing
+
+**Source:** [findings/4TTb0f9fk1U.md](../findings/4TTb0f9fk1U.md)
+
+Scale position size by realized volatility (ATR) so that every trade risks the same dollar amount regardless of instrument. Eliminates the systematic over-exposure to high-volatility instruments that equal-sleeve sizing creates.
+
+**Formula:**
+```
+position_size = risk_per_trade / (atr_multiplier × ATR(N))
+risk_per_trade = fixed dollar amount (e.g., ₹2,000 or $2,000)
+atr_multiplier = stop distance in ATR units (e.g., 3)
+ATR(N) = N-day average true range (typically N=20)
+```
+
+**Outcome vs equal sizing (Double Seven strategy, same signals):**
+- Total return: +57% vs +49%
+- Max drawdown: 15% vs 16%
+- Sharpe: 0.69 vs 0.58
+
+**Why it works:** QQQ can be 2–3× more volatile than SPY on a given day. Equal sleeves implicitly over-bet on the volatile instrument. ATR sizing normalizes to equal risk-per-trade across instruments, which is the correct unit of exposure for a strategy tested on mixed-volatility assets.
+
+**NSE adaptation:** Directly applicable to Nifty vs BankNifty sizing in NiftyShield. BankNifty ATR is typically 1.5–2× Nifty ATR. Using equal lots on both instruments over-exposes the portfolio to BankNifty drawdowns. ATR-normalize lot counts relative to a fixed notional risk per position.
+
+---
 tags: [options-selling, adjustment, risk-management, strangle, index-options]
 source: findings/VFRHrYtkr6o.md
 added: 2026-06-13
