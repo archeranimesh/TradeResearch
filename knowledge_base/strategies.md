@@ -84,3 +84,61 @@ added: 2026-06-13
 **Portability:** The vault is a folder. Copy it to any machine with Claude Code installed and the full knowledge graph is immediately available.
 
 **NiftyShield use case:** Build a NiftyShield-specific vault ingesting NSE options literature, SEBI margin rules, IV seasonality data, adjustment rule documentation, and backtesting results. Query it with natural language instead of relying on web search or memory.
+
+---
+
+---
+tags: [options-selling, strangle, strike-selection, risk-management, nse, index-options]
+source: findings/VFRHrYtkr6o.md
+added: 2026-06-13
+---
+
+## Fixed-Premium Selling — IV-Normalized Risk Control
+
+**Source:** [findings/VFRHrYtkr6o.md](../findings/VFRHrYtkr6o.md)
+
+Instead of selling the ATM straddle/strangle (where premium varies with IV), sell the specific strike priced near a fixed target premium (e.g., ₹75 for Nifty, ₹225 for Sensex). This normalizes max-loss-per-day across different IV regimes.
+
+**Why ATM fails for risk management:**
+- High IV day: ATM call sells at ₹300 → 30% SL = ₹90 loss per leg
+- Low IV day: ATM call sells at ₹70 → 30% SL = ₹21 loss per leg
+- The per-trade risk swings 4× without any change in position size
+
+**Fixed-premium approach:**
+- Select the strike whose market price is closest to ₹75 (Nifty) each morning
+- 50% SL = ₹37.5 loss per leg, every day, regardless of IV environment
+- Max-drawdown distribution is tighter → easier to size capital correctly
+
+**Entry:** Post 9:15 open candle, between 9:20–9:30 AM. Two lots staggered (9:22 and 9:29) for time diversification within the same strike.
+
+**Instruments:** Nifty DT1+DT0 (Monday+Tuesday), Sensex DT1+DT0 (Thursday+Friday) = 8 opportunities/month.
+
+**Rationale:** Near-expiry theta decay is maximum on DT0/DT1. Restricting to the final 1–2 days captures peak theta while minimizing overnight gap exposure (intraday only, all positions closed by 3:15 PM).
+
+**Backtest results (₹6L margin, Aug 2023 – Feb 2025):** 60% win rate, avg monthly profit ₹15,700, max drawdown ₹23K (~4%), max single-day loss ~1.7%, pre-tax ROI ~26% on total capital (pledged MF + cash).
+
+---
+
+---
+tags: [options-selling, adjustment, risk-management, strangle, index-options]
+source: findings/VFRHrYtkr6o.md
+added: 2026-06-13
+---
+
+## Cost-Based SL Migration — Protecting the Surviving Leg
+
+**Source:** [findings/VFRHrYtkr6o.md](../findings/VFRHrYtkr6o.md)
+
+When running a straddle or strangle, the two legs are managed independently but with a conditional linkage: if one leg is stopped out, the surviving leg's stop loss is immediately moved to its entry price (break-even).
+
+**Mechanics:**
+1. Sell call at ₹100 (SL at ₹150 = 50%) + sell put at ₹100 (SL at ₹150 = 50%)
+2. Market rallies → call hits ₹150, call leg closed, loss = ₹50
+3. Immediately: put SL moved from ₹150 to ₹100 (entry price)
+4. Worst-case net loss now capped at ₹50 (one leg only), not ₹100
+
+**Why this works:** After a directional move sufficient to stop one leg, the market often continues. Keeping the surviving leg's SL at the original level (₹150) risks a second full loss; moving it to cost eliminates further loss on that leg. Net result: single-leg max-loss instead of double-leg max-loss on worst-case days.
+
+**Execution requirement:** Must be automatable — human reaction time is too slow on fast moves. The SL migration must be a conditional algo rule: "IF call_leg_status = stopped THEN put_leg_SL = put_leg_entry_price."
+
+**Contrast with 2x-credit SL rule:** The 2x-credit rule (from [strategies.md](strategies.md)) applies a single combined SL to the whole position. Cost-based migration applies per-leg SLs with a conditional linkage. Both can coexist: set individual leg SLs, with the overall position also subject to a combined loss cap.

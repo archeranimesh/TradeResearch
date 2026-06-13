@@ -22,3 +22,12 @@ Review periodically. Check the box when actioned. Carry decisions into NiftyShie
 - [ ] Run trade-data-dump prompt on last 3 months of NiftyShield options P&L (Zerodha tradebook export) — get win rate, avg credit, avg loss, return on margin
 - [ ] Evaluate Claude Code + Obsidian vault setup for NiftyShield research KB
 - [ ] Review Kaparthi's LLM wiki on GitHub as vault instruction scaffold
+
+## 2026-06-13 | The Options Strategy That Lets Traders Sleep Peacefully !! #Face2Face with Vaibhav Shinde — Learn Stock Market 1M+
+**Signal:** Fixed-premium short straddle on Nifty/Sensex DT1+DT0 with cost-based SL migration — concrete implementation (₹75 premium, 50% SL, break-even leg migration, 3:15 exit) plus redundant OTM hedging philosophy and Monte Carlo capital-sizing workflow.
+**Finding:** findings/VFRHrYtkr6o.md
+**Action:**
+- [ ] Backtest fixed-premium (₹75 analog) vs ATM straddle entry on Nifty DT0 — does normalized premium produce tighter max-drawdown distribution?
+- [ ] Implement cost-based SL migration: when one leg stops out, surviving leg SL moves to entry price (break-even)
+- [ ] Run Monte Carlo on NiftyShield backtest P&L series via ChatGPT — use 90th percentile max drawdown to size capital buffer, not historical max
+- [ ] Audit pledged NiftyBees margin haircut assumption vs current SEBI rules (equity MF haircut may differ from ETF)

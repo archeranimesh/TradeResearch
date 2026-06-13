@@ -86,3 +86,56 @@ Most trading education stops at Strategy (entry/exit rules). Fewer teach Setup (
 **Journal prompt:** "Am I losing because my strategy is wrong, or because I don't have a system? What would I need to measure to know the difference?"
 
 Real consistency only comes at the System level. If results are inconsistent, the bottleneck is almost always System — not Strategy.
+
+---
+
+---
+tags: [process, psychology, edge-calculation, metrics]
+source: findings/VFRHrYtkr6o.md
+added: 2026-06-13
+---
+
+## Losing Streaks Are Expected — Statistical Literacy for Systematic Traders
+
+**Source:** [findings/VFRHrYtkr6o.md](../findings/VFRHrYtkr6o.md)
+
+A 60% win rate does NOT guarantee alternating wins and losses. In any finite sample, clustering of losses is mathematically inevitable. At 60% win rate over 2.5 years:
+- 4 consecutive losses: occurred 3 times
+- 5 consecutive losses: occurred once
+
+"People say that in every 5 trades, 3 should be profitable and 2 should be loss-making. But statistically, that number 5 is very small — it is irrelevant. You should look at how the edge performs over 100 trades."
+
+**Why this matters:** Most traders abandon a working strategy during a losing streak, precisely when they should be doing nothing. The correct response to a losing streak within an otherwise valid strategy is to verify: (a) execution was correct, (b) market conditions haven't shifted regime, (c) you're inside the expected statistical distribution. If yes to all three: continue.
+
+**Journal prompt:** "Am I in a losing streak because my strategy has stopped working, or because I haven't given it enough trades to express its edge? How many trades have I taken since I last updated my win-rate estimate? Is this streak inside or outside the expected statistical range?"
+
+**Algo corollary:** Systematic traders should pre-compute the expected maximum losing streak for their win rate and sample size before going live. For 60% win rate, max losing streak of 5 in 100 trades is approximately expected. Seeing it live should not be a surprise.
+
+---
+
+---
+tags: [process, psychology, automation, ai-workflow]
+source: findings/VFRHrYtkr6o.md
+added: 2026-06-13
+---
+
+## AI as Trading Coach — Emotion Processing During Drawdowns
+
+**Source:** [findings/VFRHrYtkr6o.md](../findings/VFRHrYtkr6o.md)
+
+Trading is often a socially isolated activity. Family and friends either don't understand or actively discourage it. During drawdowns, the natural instinct is to discuss the situation — but most available peers are also loss-making traders giving biased, emotion-driven advice.
+
+**The AI coaching use case:** Build a custom GPT persona with your trading system rules, risk parameters, and psychological tendencies. When facing emotional challenges (drawdown, urge to deviate from algo, MTM anxiety), use it as a first-response sounding board before taking any action.
+
+**Specific example:** Trader was checking P&L every 30 minutes during market hours despite no actionable information. Custom GPT reminded him: "Your job as a systematic trader is about execution (input), not P&L (output). Day-to-day MTM is statistically irrelevant — look at it over the long-term window you designed for."
+
+**System prompt for trading buddy GPT:**
+```
+You are my trading coach. I am a systematic algorithmic options seller on NSE. 
+My system: [describe your strategy, risk rules, algo framework].
+My known psychological weaknesses: [list them].
+When I describe a situation, help me evaluate it from the perspective of a disciplined systematic trader — not from an emotional perspective. 
+Ask me: "Is this within your pre-defined system rules? If yes, do nothing. If no, what rule does it violate and why?"
+```
+
+**Personas for learning:** Store expert personas (Rob Carver, Perry Kaufman, etc.) as separate system prompts. Upload book chapters or papers and ask the persona to explain it as a mentor to a practitioner-level student. Faster than re-reading; produces applied explanations rather than academic ones.
