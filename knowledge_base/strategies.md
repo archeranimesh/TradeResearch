@@ -171,3 +171,57 @@ When running a straddle or strangle, the two legs are managed independently but 
 **Execution requirement:** Must be automatable — human reaction time is too slow on fast moves. The SL migration must be a conditional algo rule: "IF call_leg_status = stopped THEN put_leg_SL = put_leg_entry_price."
 
 **Contrast with 2x-credit SL rule:** The 2x-credit rule (from [strategies.md](strategies.md)) applies a single combined SL to the whole position. Cost-based migration applies per-leg SLs with a conditional linkage. Both can coexist: set individual leg SLs, with the overall position also subject to a combined loss cap.
+
+---
+
+---
+tags: [options-selling, delta-neutral, strike-selection, expiry-specific, risk-management, nse, index-options, backtesting]
+source: findings/iorriHcOpdU.md
+added: 2026-06-28
+---
+
+## Double-Sided Ratio Spread — Expiry Day Premium Income (1:3 Buy:Sell)
+
+**Source:** [findings/iorriHcOpdU.md](../findings/iorriHcOpdU.md)
+
+A mechanical options-selling structure deployed exclusively on expiry day that combines delta-neutral hedging (long ATM) with aggressive theta capture (short 3× the OTM).
+
+**Construction (9:25–9:30 AM entry, expiry day only):**
+
+1. **Identify ATM strike** — the 50-delta call/put (strikes are typically even 100-point intervals on Nifty/Sensex)
+2. **Buy legs:** 1 call + 1 put at ATM premium (e.g., call ₹180, put ₹135)
+3. **Sell legs:** Divide each buy premium by 3, then sell 3 legs at that target price
+   - Call: ₹180 ÷ 3 = 60 → sell 3 calls at ~60 (or closest market price ~67)
+   - Put: ₹135 ÷ 3 = 45 → sell 3 puts at ~45 (or closest market price ~46)
+4. **Payoff profile:** Forms a "Batman" or double-straddle shape; steep loss boundaries at 1.2–1.5% up/down from ATM on either side
+
+**Greeks management:**
+- **Vega:** Strongly short (3 short legs per side = high volatility sensitivity). Mitigated by holding to expiry when IV collapse accelerates. Risky if taken pre-expiry.
+- **Theta:** Strongly positive. Peak on expiry day; every 15 min of time decay drives profit.
+- **Delta:** Near-neutral at entry; converges to intrinsic by 3:27 PM close.
+
+**Exit rules:**
+- **Profit:** No target. Let theta run through close (3:27 PM) or exit early if comfortable. Realized profit typically 0.7–1.4% on deployed margin.
+- **Loss:** Hard 1% stop loss on margin deployed. Exit immediately upon hitting 1% unrealized loss. Zero discretion; no averaging, no hope.
+
+**Reason for hard 1% rule:** If 1% loss is taken, the next expiry's 1% profit is insufficient to fully recover (2-week recovery cycle). Loss management is the only controllable variable; profit is a secondary outcome of time decay.
+
+**Backtesting (NSE Nifty/Sensex, April–June 2026):**
+- 8 consecutive expiries tested (war-volatility period)
+- Win rate: 83% (5 profitable, 1 loss, 2 breakeven)
+- Avg ROI per expiry: ~0.9–1.4% on margin (highly consistent)
+- Margin deployed: ~₹6.5 lakh on expiry day (SEBI mandates higher margin on expiry vs. non-expiry)
+- Tradeable 2×/week: Nifty (Tuesday) + Sensex (Thursday)
+
+**Why expiry day works:**
+- Market consolidates in ~1–1.5% range historically (M-shape, N-shape, or trending; all profitable within the breakeven range)
+- OI built over weeks creates pressure to pin strikes or trap traders; theta captures this via time decay
+- No chart reading required; structure is agnostic to direction
+
+**Execution requirement:** Fully mechanical entry (time + ATM + divide/multiply by 3); holding discipline (1% SL or to close); no discretion or bias. Backtesting shows consistency even under high-vol/war conditions.
+
+**Caveats:**
+- Tested only on index (Nifty/Sensex). Scaling to 10+ lots and slippage impact unknown.
+- Single-lot examples; psychological cost of loss-then-recovery cycles (1% loss + 1% win) may test discipline.
+- Capital efficiency: ₹6.5k profit on ₹6.5L margin = ~0.1% net ROI per expiry after loss cases; compare to alternative spreads (strangles, condors) for competitive positioning.
+- Vega-short profile is aggressive; works only on expiry day when IV collapse offsets. Pre-expiry deployment is high-risk.
